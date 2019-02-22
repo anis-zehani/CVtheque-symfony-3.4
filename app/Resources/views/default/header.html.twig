@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<style>
+    	.dropdown-menu-center {
+            right: auto;
+            left: 50%;
+            -webkit-transform: translate(-50%, 0);
+            -o-transform: translate(-50%, 0);
+            transform: translate(-50%, 0);
+        }
+        .blink_me {
+            -webkit-animation-name: blinker;
+            -webkit-animation-duration: 2s;
+            -webkit-animation-timing-function: linear;
+            -webkit-animation-iteration-count: infinite;
+
+            -moz-animation-name: blinker;
+            -moz-animation-duration: 2s;
+            -moz-animation-timing-function: linear;
+            -moz-animation-iteration-count: infinite;
+
+            animation-name: blinker;
+            animation-duration: 2s;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+        }
+
+        @-moz-keyframes blinker {
+            0% { opacity: 1.0; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1.0; }
+        }
+
+        @-webkit-keyframes blinker {
+            0% { opacity: 1.0; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1.0; }
+        }
+
+        @keyframes blinker {
+            0% { opacity: 1.0; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1.0; }
+        }
+
+        /* Remove the navbar's default margin-bottom and rounded borders */
+        .navbar {
+            margin-bottom: 0;
+            border-radius: 0;
+        }
+
+        /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+        .row.content {height: 450px}
+
+        /* Set gray background color and 100% height */
+        .sidenav {
+            padding-top: 20px;
+            height: 100%;
+        }
+
+        /* Set black background color, white text and some padding */
+        footer {
+            color: white;
+            padding: 15px;
+        }
+
+        /* On small screens, set height to 'auto' for sidenav and grid */
+        @media screen and (max-width: 767px) {
+            .sidenav {
+                height: auto;
+                padding: 15px;
+            }
+            .row.content {height:auto;}
+        }
+       
+        nav li a:hover 
+        {
+        	
+        	text-decoration: underline;
+        }
+
+    </style>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href={{ asset('bootstrap/img/favicon.ico') }}>
+
+    <title>Gestion des recrutements - Smartgraphe</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href={{ asset('bootstrap/css/bootstrap.min.css') }} rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300" rel="stylesheet">
+	
+    <!-- Custom styles for this template -->
+    <link href={{ asset('bootstrap/css/signin.css') }} rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+
+    <!-- Imports JS de la DATATABLE (utile aussi pour la Modale), laisser dans le head-->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    
+    <!-- Imports Moment.Js pour formater datetime : écran "Mes Rappels"-->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+      
+    <script type="text/javascript">
+        var idSuppression = 0;
+        var idModification = 0;
+     </script>
+   
+</head>
+<body class="text-center" style="background-color: #f5f5f5;font-family: 'Roboto';font-weight: 300;font-size:15px;">
+
+
+<nav class="navbar navbar-expand-lg navbar-light fixed-top navbar-inverse" style="height:7ch;background-color: #283e4a;font-size:15px;font-weight: 300;">
+		
+		<a class="navbar-brand" href="{{app.request.basePath}}/accueil/">
+                 <img src="{{ asset('bootstrap/img/logo.jpg') }}" style="padding-top:1px;border:0;cursor: pointer;border-radius: 5px;width:80px;">
+        </a>
+        
+		<button class="navbar-toggler" style="background-color: #e9ebee" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent" style="background-color: #283e4a;text-align:left;">
+ 
+                		<ul class="navbar-nav mr-auto" >
+                		
+                			<!-- Accueil -->
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tooltip" data-placement="top" title="Accueil" href="{{app.request.basePath}}/accueil/">Accueil</a>
+                            </li> 
+                            
+                            <!-- Mes Rappels -->
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tooltip" data-placement="top" title="Mes Rappels" href="{{app.request.basePath}}/showAllRappels/">Mes Rappels</a>
+                            </li>
+
+                            <!-- Mes candidats -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" title="Mes candidats" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  Mes Candidats
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                  <a class="dropdown-item" href="{{app.request.basePath}}/showAllCandidats/">Candidats Actifs</a>
+                                  <div class="dropdown-divider"></div>
+                                  <a class="dropdown-item" href="{{app.request.basePath}}/showAllArchivedCandidats/">Candidats Archivés</a>
+                                  <div class="dropdown-divider"></div>
+                                  <a class="dropdown-item" href="{{app.request.basePath}}/formAddCandidat/">Ajouter un candidat</a>
+                                </div>
+                            </li>
+                            
+                            <!-- Mes opportunités -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" title="Mes opportunités" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  Mes Opportunités
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                  <a class="dropdown-item" href="{{app.request.basePath}}/showAllOpportunites/">Opportunités Actives</a>
+                                  <div class="dropdown-divider"></div>
+                                  <a class="dropdown-item" href="{{app.request.basePath}}/showAllArchivedOpportunites/">Opportunités Archivées</a>
+                                  <div class="dropdown-divider"></div>
+                                  <a class="dropdown-item" href="{{app.request.basePath}}/formAddOpportunite/">Ajouter une opportunité</a>
+                                </div>
+                            </li>
+
+                        	<!-- Mes partenaires -->       
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" title="Mes partenaires" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  Mes Partenaires
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                  <a class="dropdown-item" href="{{app.request.basePath}}/showAllPartenaires/">Tous mes partenaires</a>
+                                  <div class="dropdown-divider"></div>
+                                  <a class="dropdown-item" href="{{app.request.basePath}}/formAddPartenaire/">Ajouter un partenaire</a>
+                                </div>
+                            </li>
+                            
+                            
+                            <!-- Technologies -->
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tooltip" data-placement="top" title="Les Technologies" href="{{app.request.basePath}}/showAllTechnologies/">Technologies</a>
+                            </li> 
+                            
+                            
+                            <!-- Entreprises -->
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tooltip" data-placement="top" title="Les Entreprises" href="{{app.request.basePath}}/showAllEntreprises/">Entreprises</a>
+                            </li> 
+                         
+                         
+                            <!-- Écoles -->
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tooltip" data-placement="top" title="Les Écoles" href="{{app.request.basePath}}/showAllEcoles/">Écoles</a>
+                            </li> 
+                            
+                            
+                            <!-- Certifications -->
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tooltip" data-placement="top" title="Les Certifications" href="{{app.request.basePath}}/showAllCertifications/">Certifications</a>
+                            </li> 
+
+                            <!-- Mes Contacts -->       
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" title="Mes Contacts Utiles" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  Mes contacts
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                  <a class="dropdown-item" href="{{app.request.basePath}}/showAllContacts/">Tous mes contacts</a>
+                                  <div class="dropdown-divider"></div>
+                                  <a class="dropdown-item" href="{{app.request.basePath}}/formAddContact/">Ajouter un contact</a>
+                                </div>
+                            </li>
+
+                		</ul>
+    	
+                        <span class="navbar-text">
+                              <a data-toggle="tooltip" data-placement="top" title="Quitter l'application" href="{{app.request.basePath}}/exit/"><img src={{ asset('bootstrap/img/exit.png') }} width="30" height="30"></a>
+                        </span> 
+        	
+    				
+		</div>
+		
+		
+
+</nav>
+
+
+

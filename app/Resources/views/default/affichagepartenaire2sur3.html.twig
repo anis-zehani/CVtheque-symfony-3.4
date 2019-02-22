@@ -1,0 +1,107 @@
+				<nav aria-label="breadcrumb" style="padding-top:10px;width:100%">
+                	<ol class="breadcrumb" style="background-color: #cbd7e0;color:#000000;vertical-align:middle;">
+                    	<li class="breadcrumb-item"><a href="{{app.request.basePath}}/accueil/" style="color:#000000">Accueil</a></li>
+                        <li class="breadcrumb-item"><a href="{{app.request.basePath}}/showAllPartenaires/" style="color:#000000">Mes Partenaires</a></li>
+                        <li class="breadcrumb-item active" aria-current="page" style="color:#0073b1">{{ onePartenaire.prenom }} {{ onePartenaire.nom }}</li>
+                    </ol>
+            	</nav>
+				
+				<table id="my_table" class="table table-striped table-bordered" cellspacing="0" width="100%" style="text-align:left;font-size:13px;overflow-x: scroll ;overflow-y: scroll ;">
+                    <thead>
+                    <tr> 
+                        <th style="color:#0073b1;width:120px">{{ onePartenaire.prenom }} {{ onePartenaire.nom }}</th>
+                        <th style="color:#0073b1">Informations & contacts</th>
+                        <th style="color:#0073b1">Accès & entreprise</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    	<tr>
+                            <td style="padding: 0 0 0 0;">
+                        		<img src="{{app.request.basePath}}/{{ onePartenaire.photo }}"  width="120px" height="120px">
+                        	</td>
+                            <td>
+    							<b>Partenaire :</b> {{ onePartenaire.prenom }} {{ onePartenaire.nom }}<br>
+                                <b>Poste :</b> {{ onePartenaire.poste }}<br>
+                                <b>Tél :</b> {{ onePartenaire.telephone }}<br>
+                                <b>Email :</b> {{ onePartenaire.email }}<br>
+                            </td>
+                            
+                            <td>
+                            	
+         						<b>Login :</b> {{ onePartenaire.login }}<br>
+         						<b>Password :</b> {{ onePartenaire.password }}<br>
+         						<b>Entreprise :</b> {{ onePartenaire.entreprise }}<br>
+
+                           </td>
+                        </tr>
+                    </tbody>
+                </table>
+    			
+    			<table id="my_table" class="table table-striped table-bordered" cellspacing="0" width="100%" style="text-align:left;font-size:13px;overflow-x: scroll ;overflow-y: scroll ;">
+                    <thead>
+                    <tr> 
+                        <th style="width:40%;color:#0073b1">Technologies ciblées</th>
+                        <th style="width:40%;color:#0073b1">Description détaillée</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                {% for technologie in onePartenaire.listeTechnologies %}
+                                          -{{ technologie.nom }}       <img src="{{app.request.basePath}}/bootstrap/img/delete-ajax.jpg" onclick="removeTechnologie({{ onePartenaire.id }},{{ technologie.id }});" style="cursor:pointer;"/><br>
+                                {% endfor %}
+                    		</td>
+                    		
+                    		<td>
+                    			<b>Description :</b> {{ onePartenaire.descriptionDetaillee }}<br>
+                            </td>
+         
+                        </tr>
+                    </tbody>
+                </table>
+    
+                
+                
+                <table id="my_table" class="table table-striped table-bordered" cellspacing="0" width="100%" style="text-align:left;font-size:13px;overflow-x: scroll ;overflow-y: scroll ;">
+                    
+                    <tbody>
+                    	<tr>
+                            <td>
+                               <div class="form-group">
+                			   		<a href="{{app.request.basePath}}/formUpdatePartenaire/{{ onePartenaire.id }}/">
+                         				<input type="button" class="btn btn-primary btn-sm btn-block"  id="btnAjouter" value="Modifier" style="background-color: #0073b1;border: none;"/>
+                    			    </a>
+                			   </div> 
+                            </td>
+                   		</tr>
+                   		
+                    </tbody>
+                </table>
+                
+
+<SCRIPT>
+	//Supprime une Technologie pour un Partenaire
+    function removeTechnologie(idPartenaire, idTechnologie)
+    {
+    	
+        $.ajax({
+            url : '{{app.request.basePath}}/removeTechnologieForPartenaire/'+idPartenaire+'/'+idTechnologie+'/',
+            type : 'GET',
+            dataType : 'html',
+            success : function(data, statut){
+                
+            location.reload();
+            //var json = JSON.parse(data);
+            //console.log(json);
+
+            },
+
+            error : function(resultat, statut, erreur){
+                console.log(statut);
+                console.log(erreur);
+                console.log(resultat);
+            }
+        });
+
+    }
+</SCRIPT>

@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="{{ asset('bootstrap/img/favicon.ico') }}">
+
+    <title>Gestion des recrutements - Smartgraphe</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href={{ asset('bootstrap/css/bootstrap.min.css') }} rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href={{ asset('bootstrap/css/signin.css') }} rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300" rel="stylesheet">
+</head>
+
+<body class="text-center" style="background-color: #ffffff;font-family: 'Roboto';">
+<div class="container-fluid">
+
+    <form id="myform" class="form-signin" action="{{app.request.basePath}}/login/" method="post">
+        <img style="border-radius: 5%;background-color: #FFFFFF;" class="mb-4" src="{{ asset('bootstrap/img/logo.jpg') }}" alt="" width="300" height="140">
+
+        <label for="inputEmail" class="sr-only">Adresse email Admin</label>
+        <input type="text" name="login" id="login" class="form-control" placeholder="Identifiant" required autofocus>
+        <label for="inputPassword" class="sr-only">Mot de passe Admin</label>
+        <input type="password" name="password" id="password" class="form-control" placeholder="Mot de passe" required>
+     
+        <button class="btn btn-lg btn-primary btn-block" type="submit" style="border:none;background-color: #0073b1">Se connecter</button>
+        <p class="mt-5 mb-3 text-muted" style="color:#283e4a">Smartgraphe &copy; {{ "now"|date("Y")}} Tous droits réservés</p>
+    </form>
+    
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</div>
+</body>
+</html>

@@ -1,0 +1,165 @@
+{% include 'default/header.html.twig' %}
+
+<div class="container-fluid" style="height: 86%;" >
+    <div class="row align-items-start">
+    	<div class="col-sm-1" style="text-align: left;">
+    	</div>
+    
+        <div class="col-sm-10" style="text-align: left;background-color: #ffffff;">
+        	<nav aria-label="breadcrumb" style="padding-top:10px;width:100%">
+                <ol class="breadcrumb" style="background-color: #cbd7e0;color:#000000;vertical-align:middle;">
+                    <li class="breadcrumb-item"><a href="{{app.request.basePath}}/accueil/" style="color:#000000">Accueil</a></li>
+                        <li class="breadcrumb-item"><a href="{{app.request.basePath}}/showAllOpportunites/" style="color:#000000">Mes Opportunités</a></li>
+                        <li class="breadcrumb-item active" aria-current="page" style="color:#0073b1">Modification opportunité : {{ OneOpportunite.titre }}</li>
+                    </ol>
+            </nav>
+            	
+            <form action="{{app.request.basePath}}/updateOpportunite/" method="POST" name="formUpdateOpportunite" id="formUpdateOpportunite" enctype="multipart/form-data">
+            <table id="my_table1" class="table table-striped table-bordered" cellspacing="0" width="100%" style="text-align:left;font-size:13px;overflow-x: scroll ;overflow-y: scroll ;">
+                    <thead>
+                    <tr> 
+                        <th  style="color:#0073b1">Offre & Responsable</th>
+                        <th  style="color:#0073b1">Les dates clés</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    	<tr>
+                            <td>
+    
+                                <input type="text" class="form-control" id="titre" name="titre" value="{{ OneOpportunite.titre }}"  placeholder="Titre"><br>
+                                <input type="text" class="form-control" id="tjm" name="tjm" value="{{ OneOpportunite.tjm }}"  placeholder="TJM"><br>
+                                <div class="form-group">
+    
+                                    <select class=form-control id="listePartenaires" name="listePartenaires" style="border-radius: 10px;width: 100%;height:40px" >
+                                        <option value="{{ OneOpportunite.idUtilisateur }}">{{ OneOpportunite.utilisateur }}</option>
+            							{% for partenaire in allPartenairesLight %}
+            								{% if partenaire.id != OneOpportunite.idUtilisateur %}
+                                        		<option value="{{ partenaire.id }}">{{ partenaire.prenom }} {{ partenaire.nom }}</option>
+                                        	{% endif %}
+                                        {% endfor %}
+                                    </select>
+                        		</div>
+                                
+                            </td>
+                            
+                            <td>
+                                <label for="dateDemarrageSouhaitee"><h6>Date démarrage souhaitée :</h6></label>
+                            	<input type="date" class="form-control" id="dateDemarrageSouhaitee" name="dateDemarrageSouhaitee" value="{{ OneOpportunite.dateDemarrageSouhaitee | date('Y-m-d') }}"><br>
+                           </td>
+                        </tr>
+                    </tbody>
+                </table>
+    			
+    			<table id="my_table2" class="table table-striped table-bordered" cellspacing="0" width="100%" style="text-align:left;font-size:13px;overflow-x: scroll ;overflow-y: scroll ;">
+                    <thead>
+                    <tr> 
+                        <th style="width:50%;color:#0073b1">Liste candidats</th>
+                        <th style="width:50%;color:#0073b1">Candidats potentiels</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                        	<td>
+                                {% for candidat in OneOpportunite.listeCandidats %}
+                                          -{{ candidat.prenom }} {{ candidat.nom }}<br>
+                                {% endfor %}
+
+                    		</td>
+                    		
+                            <td>
+                                <div class="form-group">
+                                    
+                                    <select multiple size="10" class=form-control id="listeCandidats[]" name="listeCandidats[]" style="border-radius: 10px;width: 100%;height:160px" >
+            							
+            							{% for candidat in allCandidatsLight %}
+                                            <option value="{{ candidat.id }}">-{{ candidat.prenom }} {{ candidat.nom }} : {{ candidat.specialite }}</option><br>
+                                        {% endfor %}
+                                        
+                                    </select>
+                        		</div>
+
+                    		</td>
+         
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <table id="my_table3" class="table table-striped table-bordered" cellspacing="0" width="100%" style="text-align:left;font-size:13px;overflow-x: scroll ;overflow-y: scroll ;">
+                    <thead>
+                    <tr> 
+                        <th style="width:40%;color:#0073b1">Technologies ciblées</th>
+                        <th style="width:40%;color:#0073b1">Ajouter technologies</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                        	<td>
+                                {% for technologie in OneOpportunite.listeTechnologies %}
+                                          -{{ technologie.nom }}<br>
+                                {% endfor %}
+                    		</td>
+                    		
+                            <td>
+                                <div class="form-group">
+                                    
+                                    <select multiple class=form-control id="listeTechnologies[]" name="listeTechnologies[]" style="border-radius: 10px;width: 100%;height:160px" >
+            							
+            							{% for technologie in allTechnologies %}
+                                            <option value="{{ technologie.id }}">-{{ technologie.nom }}</option>
+                                        {% endfor %}
+                                        
+                                    </select>
+                        		</div>
+
+                    		</td>
+         
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <table id="my_table4" class="table table-striped table-bordered" cellspacing="0" width="100%" style="text-align:left;font-size:13px;overflow-x: scroll ;overflow-y: scroll ;">
+                    <thead>
+                    <tr> 
+                        <th style="color:#0073b1">Description détaillée</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+
+                    		<td>
+                    			<textarea class="form-control" rows="6" id="descriptionDetaillee" name="descriptionDetaillee">
+                                        {% autoescape %}{{ OneOpportunite.descriptionDetaillee }}{% endautoescape %}
+                    			</textarea><br>
+                            </td>
+         
+                        </tr>
+                    </tbody>
+                </table>
+    
+                
+                
+                <table id="my_table5" class="table table-striped table-bordered" cellspacing="0" width="100%" style="text-align:left;font-size:13px;overflow-x: scroll ;overflow-y: scroll ;">
+                    
+                    <tbody>
+                    	<tr>
+                            <td>
+                               <div class="form-group">
+                               		<input type="hidden" id="id" name="id" value="{{ OneOpportunite.id }}"/>
+                     				<input type="submit" class="btn btn-primary btn-sm btn-block"  id="btnAjouter" value="Enregistrer" style="background-color: #0073b1;border: none;"/>
+                			   </div> 
+                            </td>
+                   		</tr>
+                   		
+                    </tbody>
+                </table>
+                
+                
+                </form>
+        </div> 
+		
+		<div class="col-sm-1" style="text-align: left;">
+    	</div>
+    </div>
+</div>
+
+{% include 'default/footer.html.twig' %}

@@ -1,0 +1,178 @@
+{% include 'default/header.html.twig' %}
+
+<div class="container-fluid" style="height: 88%;background-color: #ffffff;" >
+    <div class="row align-items-start" style="background-color: #ffffff;">
+    
+        <!-- Formulaire Ajout / Modification Rappels-->
+        <div class="col-sm-3" style="text-align: left;">
+            <form action="../addRappel/" method="post" name="formRappels" id="formRappels">
+                <div class="form-group">
+                    <label for="nameScreen" style="color: #0073b1;font-size: 16px;font-weight: bold;">Mes Rappels :</label>
+                </div>
+
+                <div class="form-group"> 
+                        <textarea class="form-control" rows="10" id="description" name="description" placeholder="Description"></textarea>
+                </div>
+                
+                <div class="form-group"> 
+                	<input class="form-control" id="datetime" name="datetime" type="datetime-local">
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" class="btn btn-primary btn-sm btn-block"  id="btnAjouter" value="Ajouter un Rappel" style="background-color: #0073b1;border: none;"/>
+                </div>
+
+                <input type="hidden" id="id" name="id" value="id"/>
+
+            </form>
+
+
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary btn-sm btn-block"  onclick="resetRappel();" value="Tout Réinitialiser" style="background-color: #0073b1;border: none;"/>
+            </div>
+        </div>
+
+        <div class="col-sm-9" style="text-align: left;">
+
+            <table id="my_table" class="table table-striped table-bordered" cellspacing="0" width="100%" style="font-size:13px;overflow-x: scroll ;overflow-y: scroll ;">
+                <thead>
+                <tr>
+                    <th width="2%"></th>
+                    <th>Description</th>
+                    <th width="20%">Date</th>
+                    <th width="2%"></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for key in allRappels %}
+                    <tr>
+                        <td style="text-align:center;background-color: #FFFFFF">
+                            <a href="#" onclick="idSuppression={{key.id}}; $('#ModaleRappel').modal();"><img src="{{ asset('./bootstrap/img/delete.jpg') }}" width="20" height="20" ></a>
+                        </td>
+                        
+                        <td>
+                        {% if key.description is defined %}
+                                {{ key.description }}
+                        {% endif %}
+               			</td>
+               			
+               			<td>
+                        {% if key.datetime is defined %}
+                                {{ key.datetime }}
+                        {% endif %}
+               			</td>
+               			 
+                        
+                        <td style="text-align:center;background-color: #FFFFFF"><a href="#" id="btnModifier" onclick="modifierRappel('{{ key.id }}','{{ key.description |replace({"'": "\\'",'\r\n': '\\r\\n', '\n': '\\n', '\r': '\\r'})}}','{{ key.datetime }}');"><img src="{{ asset('./bootstrap/img/update.jpg') }}" width="20" height="20" ></a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="form-row">
+            <!--------------------------- Feêtre POP-UP la Modale ------------------------------------------------>
+            <div class="modal fade" id="ModaleRappel" tabindex="-1" role="dialog" aria-labelledby="exampleModaleRappelTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <form action="../deleteRappel/" method="post" name="formModale" id="formModale">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Supprimer un Rappel</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                Attention, vous êtes sur le point de supprimer ce Rappel.
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                                <button type="submit" class="btn btn-primary" id="btnValider">Valider</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- Clique sur l'icône Modifier (dans le tableau Rappels)-->
+<SCRIPT>
+    function modifierRappel(id, description, datetime)
+    {
+        document.getElementById("id").value = id;
+        document.getElementById("description").value = description;
+        document.getElementById("datetime").value = moment(datetime).format("YYYY-MM-DDThh:mm");
+        
+        document.getElementById("btnAjouter").value = 'Modifier un Rappel';
+        
+        var formulaire = document.getElementById('formRappels');
+        formulaire.setAttribute("action", "../updateRappel/");
+
+        
+    }
+</SCRIPT>
+<!-- Clique sur le bouton Reset(dans le formulaire Rappel)-->
+<SCRIPT>
+    function resetRappel()
+    {
+
+        document.getElementById("description").value = '';
+        document.getElementById("datetime").value = '';
+        
+        document.getElementById("btnAjouter").value = 'Ajouter un Rappel';
+        
+        var formulaire = document.getElementById('formRappels');
+        formulaire.setAttribute("action", "../addRappel/");
+    }
+</SCRIPT>
+
+<!-- Code qui s'exécute quand j'ouvre la Modale Supprimer Rappel-->
+<SCRIPT type="text/javascript">
+    $('#ModaleRappel').on('shown.bs.modal', function () {
+        $('#myInput').trigger('focus');
+       
+        var formulaire = document.getElementById('formModale');
+        formulaire.setAttribute("action", "../deleteRappel/"+window.idSuppression+"/");
+        idSuppression=0;
+       
+    })
+</SCRIPT>
+
+<!-- Configuration de la DATATABLE-->
+<SCRIPT type="text/javascript">
+    $(document).ready(function() {
+        $('#my_table').DataTable({
+            "fixedColumns": true,
+            "autoWidth": true,
+            "scrollX": true,
+            "scrollY": true,
+            "language": {
+                "sProcessing": "Traitement en cours ...",
+                "sLengthMenu": "Afficher _MENU_ lignes",
+                "sZeroRecords": "Aucun résultat trouvé",
+                "sEmptyTable": "Aucune donnée disponible",
+                "sInfo": "Lignes _START_ à _END_ sur _TOTAL_",
+                "sInfoEmpty": "Aucune ligne affichée",
+                "sInfoFiltered": "(Filtrer un maximum de_MAX_)",
+                "sInfoPostFix": "",
+                "sSearch": "Chercher :",
+                "sUrl": "",
+                "sInfoThousands": ",",
+                "sLoadingRecords": "Chargement...",
+                "oPaginate": {
+                    "sFirst": "Premier", "sLast": "Dernier", "sNext": "Suivant", "sPrevious": "Précédent"
+                },
+                "oAria": {
+                    "sSortAscending": ": Trier par ordre croissant", "sSortDescending": ": Trier par ordre décroissant"
+                }
+
+            }
+        });
+    } );
+</SCRIPT>
+
+{% include 'default/footer.html.twig' %}

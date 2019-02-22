@@ -1,0 +1,105 @@
+{% include 'default/header.html.twig' %}
+
+<div class="container-fluid" style="height: 86%;">
+    <div class="row align-items-start">
+    	<div class="col-sm-1" style="text-align: left;">
+    	</div>
+    
+        <div class="col-sm-10" style="text-align: left;background-color: #ffffff;">
+        	<nav aria-label="breadcrumb" style="padding-top:10px;width:100%">
+                <ol class="breadcrumb" style="background-color: #cbd7e0;color:#000000;-height:50px;vertical-align:middle;">
+                    <li class="breadcrumb-item"><a href="{{app.request.basePath}}/accueil/" style="color:#000000">Accueil</a></li>
+                    <li class="breadcrumb-item"><a href="{{app.request.basePath}}/showAllContacts/" style="color:#000000">Mes Contacts</a></li>
+                    <li class="breadcrumb-item active" aria-current="page" style="color:#0073b1">Add Contact</li>
+                </ol>
+            </nav>
+            
+            <form action="{{app.request.basePath}}/addContact/" method="POST" name="formAjoutContact" id="formAjoutContact" enctype="multipart/form-data">
+            <table id="my_table" class="table table-striped table-bordered" cellspacing="0" width="100%" style="text-align:left;font-size:13px;overflow-x: scroll ;overflow-y: scroll ;">
+                    <thead>
+                    <tr> 
+                        <th style="color:#0073b1;width:120px">Photo du contact</th>
+                        <th style="color:#0073b1;">Informations & contacts</th>
+                        <th style="color:#0073b1;">Accès & entreprise</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    	<tr>
+                            <td>
+                        		<label for="photoTelechargement"><img src="{{app.request.basePath}}/bootstrap/img/profile.jpg"  width="120px" height="120px" style="cursor: pointer;"></label>
+                        		<input type="file" name="photoTelechargement" id="photoTelechargement" >
+                            </td>
+                            <td>
+    
+                                <input type="text" class="form-control" id="prenom" name="prenom" placeholder="Prénom"><br>
+                                <input type="text" class="form-control" id="nom" name="nom" placeholder="Nom"><br>
+                                <input type="text" class="form-control" id="poste" name="poste" placeholder="Poste occupé"><br>
+             					<input type="tel"  class="form-control" id="telephone" name="telephone" placeholder="Téléphone"><br>
+        						<input type="text" class="form-control" id="email" name="email" placeholder="Email (UNIQUE)" required><br>
+                            </td>
+                            
+                            <td>
+
+                                <div class="form-group">
+    
+                                    <select class=form-control id="listeEntreprises" name="listeEntreprises" style="border-radius: 10px;width: 100%;height:40px" >
+                                        <option value="">Entreprise</option>
+            							    {% for entreprise in allEntreprises %}
+                                        <option value="{{ entreprise.id }}">{{ entreprise.nom }}</option>
+                                        {% endfor %}
+                                    </select>
+                        		</div>
+                        		
+                        		<label for="type"><h6>Type du profil :</h6></label>
+                        		<div class="form-group">
+                                    <select class=form-control id="type" name="type" style="border-radius: 10px;width: 100%;height:40px" >
+            							<option value="Contact">Contact</option>
+                                    </select>
+                        		</div>
+                        		
+                           </td>
+                        </tr>
+                    </tbody>
+                </table>
+    			
+    			<table id="my_table" class="table table-striped table-bordered" cellspacing="0" width="100%" style="text-align:left;font-size:13px;overflow-x: scroll ;overflow-y: scroll ;">
+                    <thead>
+                    <tr> 
+                        <th style="width:40%;color:#0073b1">Description détaillée</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                    		<td>
+                    			<textarea class="form-control" rows="6" id="descriptionDetaillee" name="descriptionDetaillee"></textarea><br>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+    
+                
+                
+                <table id="my_table" class="table table-striped table-bordered" cellspacing="0" width="100%" style="text-align:left;font-size:13px;overflow-x: scroll ;overflow-y: scroll ;">
+                    
+                    <tbody>
+                    	<tr>
+                            <td>
+                               <div class="form-group">
+                     				<input type="submit" class="btn btn-primary btn-sm btn-block"  id="btnAjouter" value="Enregistrer" style="background-color: #0073b1;border: none;"/>
+                			   </div> 
+                            </td>
+                   		</tr>
+                   		
+                    </tbody>
+                </table>
+                
+                
+                </form>
+        </div> 
+		
+		<div class="col-sm-1" style="text-align: left;">
+    	</div>
+    </div>
+</div>
+
+{% include 'default/footer.html.twig' %}

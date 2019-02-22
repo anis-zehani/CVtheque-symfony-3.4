@@ -1,0 +1,246 @@
+{% include 'default/header.html.twig' %}
+
+<div class="container-fluid" style="height: 86%;background-color: #ffffff;" >
+    <div class="row align-items-start">
+    	<div class="col-sm-1" style="text-align: left;">
+    	</div>
+    
+        <div class="col-sm-10" style="text-align: left;">
+        	<nav aria-label="breadcrumb">
+                <ol class="breadcrumb" style="background-color: #cbd7e0;color:#000000;-height:50px;vertical-align:middle;">
+                    <li class="breadcrumb-item"><a href="{{app.request.basePath}}/accueil/" style="color:#000000">Accueil</a></li>
+                    <li class="breadcrumb-item"><a href="{{app.request.basePath}}/showAllCandidats/" style="color:#000000">Mes Candidats</a></li>
+                    <li class="breadcrumb-item active" aria-current="page" style="color:#005397">Modification candidat : {{ detailsCandidat.prenom }} {{ detailsCandidat.nom }}</li>
+                </ol>
+            </nav>
+            <form action="{{app.request.basePath}}/updateCandidat/" method="POST" name="formUpdateCandidat" id="formUpdateCandidat" enctype="multipart/form-data">
+            <table id="my_table" class="table table-striped table-bordered" cellspacing="0" width="100%" style="text-align:left;font-size:13px;overflow-x: scroll ;overflow-y: scroll ;">
+                    <thead>
+                    <tr> 
+                        <th style="color:#005397;width:120px">Photo</th>
+                        <th>Informations générales</th>
+                        <th>Spécialité & expérience</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    	<tr>
+                            <td>
+                            		<label for="photoTelechargement"><img src="{{app.request.basePath}}/{{ detailsCandidat.photo }}"  width="120px" height="120px" style="cursor: pointer;"></label>
+                            		<input type="file" name="photoTelechargement" id="photoTelechargement" >
+                                </td>
+                                <td>
+                                
+        						<input type="text" class="form-control" id="prenom" name="prenom" value="{{ detailsCandidat.prenom }}" placeholder="Prénom"><br>
+                                <input type="text" class="form-control" id="nom" name="nom" value="{{ detailsCandidat.nom }}" placeholder="Nom"><br>
+        
+                                <label for="dateDeNaissance"><h6>Date de naissance :</h6></label>
+                                <input type="date" class="form-control" id="dateDeNaissance" name="dateDeNaissance" value="{{ detailsCandidat.dateDeNaissance | date('Y-m-d') }}" placeholder="Date de Naissance"><br>
+                                <input type="text" class="form-control" id="adresse" name="adresse" value="{{ detailsCandidat.adresse }}" placeholder="Adresse"><br>
+                                <input type="text" class="form-control" id="telephone" name="telephone" value="{{ detailsCandidat.telephone }}" placeholder="Téléphone"><br>
+                                <input type="text" class="form-control" id="email" name="email" value="{{ detailsCandidat.email }}" placeholder="Email"><br>
+                               	
+                                <div class="form-group">
+                                    <select class=form-control id="situationFamiliale" name="situationFamiliale" style="border-radius: 10px;width: 100%;height:40px" placeholder="Situation Familiale">
+                                        <option value="{{ detailsCandidat.situationFamiliale }}">{{ detailsCandidat.situationFamiliale }}</option>
+            							<option value="Célibataire">Célibataire</option>
+            							<option value="Engagé(e)">Engagé(e)</option>
+            							<option value="Marié(e)">Marié(e)</option>
+                                    </select>
+                        		</div>
+                                
+                      			<input type="number" min="0" class="form-control" id="nombreEnfants" name="nombreEnfants" value="{{ detailsCandidat.nombreEnfants }}" placeholder="Enfant(s)"><br>
+                            </td>
+                            
+                            <td>
+                            	<input type="text" class="form-control" id="specialite" name="specialite" value="{{ detailsCandidat.specialite }}" placeholder="Spécialité"><br>
+         						<div class="form-group">
+                               
+                                    <select class=form-control id="listeDiplomes" name="listeDiplomes" style="border-radius: 10px;width: 100%;height:40px" placeholder="Liste Diplômes">
+                                        
+            							<option value="{{ detailsCandidat.idDiplomeCandidat }}">{{ detailsCandidat.nomDiplomeCandidat }}</option>
+                                  
+                                        {% for diplome in allDiplomes %}
+                                        	{% if diplome.id != detailsCandidat.idDiplomeCandidat %}
+                                        		<option value="{{ diplome.id }}">{{ diplome.nom }}</option>
+                                        	{% endif %}
+                                        {% endfor %}
+                                        
+                                    </select>
+                        		</div>
+        
+                                <div class="form-group">
+    
+                                    <select class=form-control id="listeEcoles" name="listeEcoles" style="border-radius: 10px;width: 100%;height:40px" placeholder="Liste Écoles">
+                                      
+                                        <option value="{{ detailsCandidat.idEcoleCandidat }}">{{ detailsCandidat.nomEcoleCandidat }}</option>
+
+                                        {% for ecole in allEcoles %}
+                                        	{% if ecole.id != detailsCandidat.idEcoleCandidat %}
+                                        		<option value="{{ ecole.id }}">{{ ecole.nom }}</option>
+                                        	{% endif %}
+                                        {% endfor %}
+                                    </select>   
+                                    
+                        		</div>
+                        		<input type="text" class="form-control" id="anneeGraduation" name="anneeGraduation" value="{{ detailsCandidat.anneeGraduation }}" placeholder="Année de graduation"><br>
+                        		<input type="text" class="form-control" id="anneeDemarrageCarriere" name="anneeDemarrageCarriere" value="{{ detailsCandidat.anneeDemarrageCarriere }}" placeholder="Année de démarrage de carrière"><br>
+
+								<div class="form-group">
+                                    <select class=form-control id="listeEntreprises" name="listeEntreprises" style="border-radius: 10px;width: 100%;height:40px" placeholder="Entreprise">
+                                        <option value="{{ detailsCandidat.idEntreprise }}">{{ detailsCandidat.entreprise }}</option>
+            							{% for entreprise in allEntreprises %}
+            								{% if entreprise.id != detailsCandidat.idEntreprise %}
+                                        	<option value="{{ entreprise.id }}">{{ entreprise.nom }}</option>
+                                        	{% endif %}
+                                        {% endfor %}
+                                    </select>
+                        		</div>
+
+                        		
+                            	<textarea class="form-control" rows="5" id="descriptionDetaillee" name="descriptionDetaillee" placeholder="Description Détaillée">
+                                        {% autoescape %}{{ detailsCandidat.descriptionDetaillee }}{% endautoescape %}
+                            	</textarea><br>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <table id="my_table" class="table table-striped table-bordered" cellspacing="0" width="100%" style="text-align:left;font-size:13px;overflow-x: scroll ;overflow-y: scroll ;">
+                    <thead>
+                    <tr> 
+                        <th style="width:50%">Technologies</th>
+                        <th style="width:50%">Ajouter technologies</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div style="overflow-y: scroll;">
+                                {% for technologie in detailsCandidat.listeTechnologies %}
+                                    -{{ technologie.nom }}<br>
+                                {% endfor %}
+                                </div>
+                    		</td>
+                            <td>
+                                <div class="form-group">
+                                    <select multiple size="10" class=form-control id="listeTechnologies[]" name="listeTechnologies[]" style="border-radius: 10px;width: 100%;"  placeholder="Liste Technologies">
+            							
+            							{% for technologie in allTechnologies %}
+                                            <option value="{{ technologie.id }}">-{{ technologie.nom }}</option>
+                                        {% endfor %}
+                                        
+                                    </select>
+                        		</div>
+                    		</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <table id="my_table" class="table table-striped table-bordered" cellspacing="0" width="100%" style="text-align:left;font-size:13px;overflow-x: scroll ;overflow-y: scroll ;">
+                    <thead>
+                    <tr> 
+                        <th style="width:50%">Certifications</th>
+                        <th style="width:50%">Ajouter certifications</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                                <td>
+                                    <div style="overflow-y: scroll;">
+                                    {% for certification in detailsCandidat.listeCertifications %}
+                                        -{{ certification.nom }}<br>
+                                    {% endfor %}
+                                    </div>
+                        		</td>
+                        		
+                        		<td>
+                            		<div class="form-group">
+                                        <select multiple size="10" class=form-control id="listeCertifications[]" name="listeCertifications[]" style="border-radius: 10px;width: 100%;" placeholder="Liste Certifications">
+                							
+                							{% for certification in allCertifications %}
+                                                <option value="{{ certification.id }}">-{{ certification.nom }}</option>
+                                            {% endfor %}
+                                            
+                                        </select>
+                            		</div>
+                    			</td>
+
+                        </tr>
+                    </tbody>
+                </table>
+    			
+    			<table id="my_table" class="table table-striped table-bordered" cellspacing="0" width="100%" style="text-align:left;font-size:13px;overflow-x: scroll ;overflow-y: scroll ;">
+                    <thead>
+                    <tr> 
+                        <th style="width:50%">Informations R.H</th>
+                        <th style="width:50%">Qualification générale & CV</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                    		<td>
+                    			<input type="text" class="form-control" id="visa" name="visa" value="{{ detailsCandidat.visa }}" placeholder="Visa"><br>
+                    			<input type="text" class="form-control" id="salaireActuel" name="salaireActuel" value="{{ detailsCandidat.salaireActuel }}" placeholder="Salaire actuel"><br>
+                    			<input type="text" class="form-control" id="pretentionSalariale" name="pretentionSalariale" value="{{ detailsCandidat.pretentionSalariale }}" placeholder="Prétention salariale"><br>
+                    			<input type="text" class="form-control" id="preavis" name="preavis" value="{{ detailsCandidat.preavis }}" placeholder="Préavis"><br>
+                            	
+                                <label for="dateDeNaissance"><h6>Date de disponibilité :</h6></label>
+                                <input type="date" class="form-control" id="dateDeDisponibilite" name="dateDeDisponibilite" value="{{ detailsCandidat.dateDeDisponibilite | date('Y-m-d') }}" placeholder="Date De Disponibilité"><br>
+                            
+                    		</td>
+                    		
+                    		<td>
+                    			<input type="text" class="form-control" id="niveauEnFrancais" name="niveauEnFrancais" value="{{ detailsCandidat.niveauEnFrancais }}" placeholder="Niveau en Français"><br>
+                    			<input type="text" class="form-control" id="niveauEnAnglais" name="niveauEnAnglais" value="{{ detailsCandidat.niveauEnAnglais }}" placeholder="Niveau en Anglais"><br>
+                    			<input type="text" class="form-control" id="noteGlobale" name="noteGlobale" value="{{ detailsCandidat.noteGlobale }}" placeholder="Note Globale"><br>
+                               
+                   				<div class="form-group">
+                                      {% for cv in detailsCandidat.listeCvs %}
+                                         -{{ cv.nom }} : <a href="{{app.request.basePath}}/{{ cv.url }}">Télécharger</a><br>
+                                      {% endfor %}
+                                </div>   
+                                
+                   				<label for="cvOriginal">Remplacer CV Original :</label>
+                                <div class="form-group">
+                        			<input type="file" name="cvOriginal" id="cvOriginal" >
+                   				</div><br>
+                   				
+                   				
+                   				<label for="cvOdix">Remplacer CV Odix :</label>
+                                <div class="form-group">
+                        			<input type="file" name="cvOdix" id="cvOdix" >
+                   				</div><br>
+
+                            </td>
+                    	
+                        </tr>
+                    </tbody>
+                </table>
+    
+                
+                
+                <table id="my_table" class="table table-striped table-bordered" cellspacing="0" width="100%" style="text-align:left;font-size:13px;overflow-x: scroll ;overflow-y: scroll ;">
+                    
+                    <tbody>
+                    	<tr>
+                            <td>
+                               <div class="form-group">
+                               		<input type="hidden" id="id" name="id" value="{{ detailsCandidat.id }}"/>
+                     				<input type="submit" class="btn btn-primary btn-sm btn-block"  id="btnAjouter" value="Enregistrer" style="background-color: #0073b1;border: none;"/>
+                			   </div> 
+                            </td>
+                   		</tr>
+                   		
+                    </tbody>
+                </table>
+                
+                
+                </form>
+        </div> 
+		
+		<div class="col-sm-1" style="text-align: left;">
+    	</div>
+    </div>
+</div>
+
+{% include 'default/footer.html.twig' %}

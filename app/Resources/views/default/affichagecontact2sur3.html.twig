@@ -1,0 +1,85 @@
+				<nav aria-label="breadcrumb">
+                    <ol class="breadcrumb" style="background-color: #cbd7e0;color:#000000;-height:50px;vertical-align:middle;">
+                        <li class="breadcrumb-item"><a href="{{app.request.basePath}}/accueil/" style="color:#000000">Accueil</a></li>
+                        <li class="breadcrumb-item"><a href="{{app.request.basePath}}/showAllContacts/" style="color:#000000">Mes Contacts</a></li>
+                        <li class="breadcrumb-item active" aria-current="page" style="color:#005397">{{ oneContact.prenom }} {{ oneContact.nom }}</li>
+                    </ol>
+            	</nav>
+				
+				<table id="my_table" class="table table-striped table-bordered" cellspacing="0" width="100%" style="text-align:left;font-size:13px;overflow-x: scroll ;overflow-y: scroll ;">
+                    <thead>
+                    <tr> 
+                        <th style="color:#005397;width:120px">Photo</th>
+                        <th>Informations & contacts</th>
+                        <th>Entreprise</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    	<tr>
+                            <td style="padding: 0 0 0 0;">
+                        		<img src="{{app.request.basePath}}/{{ oneContact.photo }}"  width="120px" height="120px">
+                        	</td>
+                            <td>
+    							<b>Contact :</b> {{ oneContact.prenom }} {{ oneContact.nom }}<br>
+                                
+                                {% if oneContact.poste is defined %}
+                    					<b>Poste : </b>{{ oneContact.poste }}<br>
+                    					{% else %}
+                    					<b>Poste : </b>N / A<br>
+                                {% endif %}
+                                {% if oneContact.telephone is defined %}
+                    					<b>Tél : </b>{{ oneContact.telephone }}<br>
+                    					{% else %}
+                    					<b>Tél : </b>N / A<br>
+                                {% endif %}
+                                
+                                <b>Email :</b> {{ oneContact.email }}<br>
+                            </td>
+                            
+                            <td>
+         						{% if oneContact.entreprise is defined %}
+                    					<b>Entreprise : </b>{{ oneContact.entreprise }}<br>
+                    					{% else %}
+                    					<b>Entreprise : </b>N / A<br>
+                                {% endif %}
+                           </td>
+                        </tr>
+                    </tbody>
+                </table>
+    			
+    			<table id="my_table" class="table table-striped table-bordered" cellspacing="0" width="100%" style="text-align:left;font-size:13px;overflow-x: scroll ;overflow-y: scroll ;">
+                    <thead>
+                    <tr> 
+                        <th style="width:40%">Description détaillée</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                    		<td>
+                    			{% if oneContact.descriptionDetaillee is defined %}
+                    					<b>Description : </b>{{ oneContact.descriptionDetaillee }}<br>
+                    					{% else %}
+                    					<b>Description : </b>N / A<br>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+    
+                
+                
+                <table id="my_table" class="table table-striped table-bordered" cellspacing="0" width="100%" style="text-align:left;font-size:13px;overflow-x: scroll ;overflow-y: scroll ;">
+                    
+                    <tbody>
+                    	<tr>
+                            <td>
+                               <div class="form-group">
+                			   		<a href="{{app.request.basePath}}/formUpdateContact/{{ oneContact.id }}/">
+                         				<input type="button" class="btn btn-primary btn-sm btn-block"  id="btnAjouter" value="Modifier" style="background-color: #0073b1;border: none;"/>
+                    			    </a>
+                			   </div> 
+                            </td>
+                   		</tr>
+                   		
+                    </tbody>
+                </table>

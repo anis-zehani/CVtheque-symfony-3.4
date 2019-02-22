@@ -1,0 +1,226 @@
+{% include 'default/header.html.twig' %}
+<style>
+		img{
+			display: none
+		}
+
+		span:hover + img{
+			display: block;
+			margin-top:-80px;
+			margin-left:100px;
+		}
+</style>		
+<div class="container-fluid" style="height: 88%;">
+    <div class="row align-items-start" style="background-color:#ffffff">
+    	
+        <div class="col-sm-6" style="text-align: center;">
+                    <nav aria-label="breadcrumb" style="padding-top:10px;width:100%;-text-align: center;">
+                        <ol class="breadcrumb" style="background-color:#cbd7e0;color:#f5f5f5;vertical-align:middle;">
+                            <li class="breadcrumb-item active" aria-current="page" style="color:#0073b1"><a href="{{app.request.basePath}}/showAllOpportunites/" style="color:#0073b1">Opportunités {{ EtatOpportunites }} : {{ allOpportunites|length }}</a></li>
+                        </ol>
+                    </nav>
+        			
+        			<table id="my_table_opportunites" class="table table-striped table-bordered" cellspacing="0" width="100%" style="text-align:left;font-size:13px;overflow-x: scroll ;overflow-y: scroll ;">
+                        <thead>
+                        <tr>
+                            <th style="color:#283e4a;width:10%">Responsable</th>
+                            <th style="color:#283e4a;width:90%">Opportunité</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        
+                        
+                        
+                        {% for key in allOpportunites %}
+                            <tr>
+                            	
+                                <td style="padding: 0 0 0 0;cursor: pointer;">
+                                	<img src="{{app.request.basePath}}/{{ key.photo }}"  width="100px" height="100px" style="display: block;margin-top:0px" onclick="showOneOpportunite({{key.id}});">
+                                </td>
+                                <td>
+                                		<div style="max-height: 150px;overflow-y: scroll;">
+                                			<a href="{{app.request.basePath}}/showOneOpportunite/{{ key.id }}/" style="color:#0073b1;font-weight:bold">-Besoin : {{ key.titre }}</a><br>
+                                			
+                                            
+                        					
+                        					{% if key.listeCandidats|length > 0 %}
+                            					<div style="color:#000;font-weight:bold">-Candidats potentiels : ({{ key.listeCandidats|length }})</div>
+               									{% for candidat in key.listeCandidats %}
+                                                      <a href="{{app.request.basePath}}/showOneCandidat/{{ candidat.id }}/" style="color:#0073b1;font-weight:bold">
+														<span>-{{ candidat.prenom }} {{ candidat.nom }}
+														</span>
+														<img src="{{app.request.basePath}}/{{ candidat.photo }}" width="80px" height="80px">
+													  </a><br>
+                                                {% endfor %}
+                                            {% endif %}
+                                            
+                                            <b>-TJM : </b>{{ key.tjm }}<br>
+                        					<b>-Date ajout : </b>{{ key.dateAjout }}<br>
+                        					<b>-Date démarrage :</b>{{ key.dateDemarrageSouhaitee }}<br>
+                                        </div>
+                                </td>
+         
+                                
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <!-- Configuration de la DATATABLE-->
+                    <SCRIPT type="text/javascript">
+                        $(document).ready(function() {
+                            $('#my_table_opportunites').DataTable({
+                                "fixedColumns": true,
+                                "autoWidth": true,
+                                "scrollX": true,
+                                "scrollY": true,
+                                "language": {
+                                    "sProcessing": "Traitement en cours ...",
+                                    "sLengthMenu": "Afficher _MENU_ lignes",
+                                    "sZeroRecords": "Aucun résultat trouvé",
+                                    "sEmptyTable": "Aucune donnée disponible",
+                                    "sInfo": "Lignes _START_ à _END_ sur _TOTAL_",
+                                    "sInfoEmpty": "Aucune ligne affichée",
+                                    "sInfoFiltered": "(Filtrer un maximum de_MAX_)",
+                                    "sInfoPostFix": "",
+                                    "sSearch": "",
+                                    "sUrl": "",
+                                    "sInfoThousands": ",",
+                                    "sLoadingRecords": "Chargement...",
+                                    "oPaginate": {
+                                        "sFirst": "Premier", "sLast": "Dernier", "sNext": "Suivant", "sPrevious": "Précédent"
+                                    },
+                                    "oAria": {
+                                        "sSortAscending": ": Trier par ordre croissant", "sSortDescending": ": Trier par ordre décroissant"
+                                    }
+                    
+                                }
+                            });
+                        } );
+                    
+                    </SCRIPT>
+
+                
+        </div>
+        
+        <div class="col-sm-6" style="text-align: left;">
+            			
+        			<nav aria-label="breadcrumb" style="padding-top:10px;width:100%">
+                        <ol class="breadcrumb" style="background-color:#cbd7e0 ;color:#f5f5f5;vertical-align:middle;">
+                            
+                            <li class="breadcrumb-item active" aria-current="page" style="color:#0073b1"><a href="{{app.request.basePath}}/showAllRappels/" style="color:#0073b1">Rappels : {{ allRappels|length }}</a></li>
+                        </ol>
+                    </nav>
+        			
+        			<table id="my_table_rappels" class="table table-striped table-bordered" cellspacing="0" width="100%" style="font-size:13px;overflow-x: scroll ;overflow-y: scroll ;">
+                        <thead>
+                        <tr>
+                        	<th width="2%"></th>
+                            <th>Description</th>
+                            <th width="30%">Date</th>
+                            
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for key in allRappels %}
+                            <tr>
+                            	<td style="text-align:center;background-color: #FFFFFF">
+                                    <a href="#" onclick="idSuppression={{key.id}}; $('#ModaleRappel').modal();"><img src="{{ asset('./bootstrap/img/delete.jpg') }}" width="20" height="20" style="display: block;margin-top:0px"></a>
+                                </td> 
+                                <td>
+                                {% if key.description is defined %}
+                                        {{ key.description }}
+                                {% endif %}
+                       			</td>
+                       			
+                       			<td>
+                                {% if key.datetime is defined %}
+                                        {{ key.datetime }}
+                                {% endif %}
+                       			</td>
+                       			
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    
+                    <div class="form-row">
+                        <!--------------------------- Fenêtre POP-UP la Modale ------------------------------------------------>
+                        <div class="modal fade" id="ModaleRappel" tabindex="-1" role="dialog" aria-labelledby="exampleModaleRappelTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <form action="../deleteRappelFromHomepage/" method="post" name="formModale" id="formModale">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLongTitle">Supprimer un Rappel</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Attention, vous êtes sur le point de supprimer ce Rappel.
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                                            <button type="submit" class="btn btn-primary" id="btnValider">Valider</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+        
+                    <!-- Configuration de la DATATABLE-->
+                    <SCRIPT type="text/javascript">
+                        $(document).ready(function() {
+                            $('#my_table_rappels').DataTable({
+                                "fixedColumns": true,
+                                "autoWidth": true,
+                                "scrollX": true,
+                                "scrollY": true,
+                                "language": {
+                                    "sProcessing": "Traitement en cours ...",
+                                    "sLengthMenu": "Afficher _MENU_ lignes",
+                                    "sZeroRecords": "Aucun résultat trouvé",
+                                    "sEmptyTable": "Aucune donnée disponible",
+                                    "sInfo": "Lignes _START_ à _END_ sur _TOTAL_",
+                                    "sInfoEmpty": "Aucune ligne affichée",
+                                    "sInfoFiltered": "(Filtrer un maximum de_MAX_)",
+                                    "sInfoPostFix": "",
+                                    "sSearch": "Chercher :",
+                                    "sUrl": "",
+                                    "sInfoThousands": ",",
+                                    "sLoadingRecords": "Chargement...",
+                                    "oPaginate": {
+                                        "sFirst": "Premier", "sLast": "Dernier", "sNext": "Suivant", "sPrevious": "Précédent"
+                                    },
+                                    "oAria": {
+                                        "sSortAscending": ": Trier par ordre croissant", "sSortDescending": ": Trier par ordre décroissant"
+                                    }
+                    
+                                }
+                            });
+                        } );
+                    </SCRIPT>
+                    
+                    
+                    <!-- Code qui s'exécute quand j'ouvre la Modale Supprimer Rappel-->
+                    <SCRIPT type="text/javascript">
+                        $('#ModaleRappel').on('shown.bs.modal', function () {
+                            $('#myInput').trigger('focus');
+                           
+                            var formulaire = document.getElementById('formModale');
+                            formulaire.setAttribute("action", "../deleteRappelFromHomepage/"+window.idSuppression+"/");
+                            idSuppression=0;
+                           
+                        })
+                    </SCRIPT>
+            
+        </div>
+        
+    </div>
+
+	
+</div>
+
+{% include 'default/footer.html.twig' %}

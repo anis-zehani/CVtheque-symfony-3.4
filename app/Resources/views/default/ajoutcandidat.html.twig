@@ -1,0 +1,205 @@
+{% include 'default/header.html.twig' %}
+			   
+<div class="container-fluid" style="height:86%;" >
+    <div class="row align-items-start" >
+    		
+    	<div class="col-sm-1" style="text-align: left;">
+    	</div>
+    
+        <div class="col-sm-10" style="text-align: left;background-color: #ffffff;">
+        	<nav aria-label="breadcrumb" style="padding-top:10px;width:100%">
+                <ol class="breadcrumb" style="background-color: #cbd7e0;color:#000000;-height:50px;vertical-align:middle;">
+                    <li class="breadcrumb-item"><a href="{{app.request.basePath}}/accueil/" style="color:#000000">Accueil</a></li>
+                    <li class="breadcrumb-item"><a href="{{app.request.basePath}}/showAllCandidats/" style="color:#000000">Mes Candidats</a></li>
+                    <li class="breadcrumb-item active" aria-current="page" style="color:#0073b1">Add Candidat</li>
+                </ol>
+            </nav>
+            
+            <form action="{{app.request.basePath}}/addCandidat/" method="POST" name="formAjoutCandidat" id="formAjoutCandidat" enctype="multipart/form-data">
+            <table id="my_table" class="table table-striped table-bordered" cellspacing="0" width="100%" style="text-align:left;font-size:13px;overflow-x: scroll ;overflow-y: scroll ;">
+                    <thead>
+                    <tr> 
+                        <th style="color:#0073b1;width:120px">Photo du candidat</th>
+                        <th style="color:#0073b1;">Informations générales</th>
+                        <th style="color:#0073b1;">Spécialité & expérience</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    	<tr>
+                            <td>
+                        		<label for="photoTelechargement"><img src="{{app.request.basePath}}/bootstrap/img/profile.jpg"  width="120px" height="120px" style="cursor: pointer;"></label>
+                        		<input type="file" name="photoTelechargement" id="photoTelechargement" >
+                            </td>
+                            <td>
+    
+                            <input type="text" class="form-control" id="prenom" name="prenom" placeholder="Prénom"><br>
+                            <input type="text" class="form-control" id="nom" name="nom" placeholder="Nom"><br>
+    
+                            <label for="dateDeNaissance"><h6>Date de naissance :</h6></label>
+                            <input type="date" class="form-control" id="dateDeNaissance" name="dateDeNaissance" placeholder="Date de Naissance"><br>
+                            <input type="text" class="form-control" id="adresse" name="adresse" placeholder="Adresse"><br>
+                            <input type="tel"  class="form-control" id="telephone" name="telephone" placeholder="Téléphone"><br>
+                            <input type="text" class="form-control" id="email" name="email" placeholder="Email"><br>
+                           	
+                            <div class="form-group">
+                                <select class=form-control id="situationFamiliale" name="situationFamiliale" style="border-radius: 10px;width: 100%;height:40px" >
+                                    <option value="">Situation familiale</option>
+        							<option value="Célibataire">Célibataire</option>
+        							<option value="Engagé(e)">Engagé(e)</option>
+        							<option value="Marié(e)">Marié(e)</option>
+                                </select>
+                    		</div>
+                            
+                            <input type="text" class="form-control" id="nombreEnfants" name="nombreEnfants" placeholder="Enfant(s)"><br>
+                  
+                            </td>
+                            <td>
+                            	<input type="text" class="form-control" id="specialite" name="specialite" placeholder="Spécialité"><br>
+         						<div class="form-group">
+                               
+                                    <select class=form-control id="listeDiplomes" name="listeDiplomes" style="border-radius: 10px;width: 100%;height:40px" >
+                                        <option value="">Choisir un diplôme</option>
+            							{% for diplome in allDiplomes %}
+                                        	<option value="{{ diplome.id }}">{{ diplome.nom }}</option>
+                                        {% endfor %}
+                                    </select>
+                        		</div>
+        
+                                <div class="form-group">
+    
+                                    <select class=form-control id="listeEcoles" name="listeEcoles" style="border-radius: 10px;width: 100%;height:40px" >
+                                        <option value="">Choisir une école</option>
+            							    {% for ecole in allEcoles %}
+                                        <option value="{{ ecole.id }}">{{ ecole.nom }}</option>
+                                        {% endfor %}
+                                    </select>
+                        		</div>
+                        		
+                                <input type="text" class="form-control" id="anneeGraduation" name="anneeGraduation" placeholder="Année de graduation"><br>
+                                
+                                <input type="text" class="form-control" id="anneeDemarrageCarriere" name="anneeDemarrageCarriere" placeholder="Année de démarrage de carrière"><br>
+                            	
+                            	<div class="form-group">
+                                    <select class=form-control id="listeEntreprises" name="listeEntreprises" style="border-radius: 10px;width: 100%;height:40px" placeholder="Entreprise">
+                                        <option value="">Entreprise</option>
+            							    {% for entreprise in allEntreprises %}
+                                        <option value="{{ entreprise.id }}">{{ entreprise.nom }}</option>
+                                        {% endfor %}
+                                    </select>
+                        		</div>
+                        		
+                            	<textarea class="form-control" rows="5" id="descriptionDetaillee" name="descriptionDetaillee" placeholder="Description Détaillée"></textarea><br>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <table id="my_table" class="table table-striped table-bordered" cellspacing="0" width="100%" style="text-align:left;font-size:13px;overflow-x: scroll ;overflow-y: scroll ;">
+                    <thead>
+                    <tr> 
+                        <th style="width:50%;color:#0073b1;">Technologies</th>
+                        <th style="width:50%;color:#0073b1;">Certifications</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    <label for="listeTechnologies[]"><h6>Technologies :</h6></label>
+                                    <select multiple size="10" class=form-control id="listeTechnologies[]" name="listeTechnologies[]" style="border-radius: 10px;width: 100%;" >
+            							
+            							{% for technologie in allTechnologies %}
+                                            <option value="{{ technologie.id }}">{{ technologie.nom }}</option>
+                                        {% endfor %}
+                                        
+                                    </select>
+                        		</div>
+                        	</td>
+                        		
+                        	<td>
+                        		<div class="form-group">
+                                   	<label for="listeCertifications[]"><h6>Certifications :</h6></label>
+                                    <select multiple size="10" class=form-control id="listeCertifications[]" name="listeCertifications[]" style="border-radius: 10px;width: 100%;" >
+            							
+            							{% for certification in allCertifications %}
+                                            <option value="{{ certification.id }}">{{ certification.nom }}</option>
+                                        {% endfor %}
+                                        
+                                    </select>
+                        		</div>
+                        		
+                    		</td>
+                    	
+                        </tr>
+                    </tbody>
+                </table>
+    			
+    			<table id="my_table" class="table table-striped table-bordered" cellspacing="0" width="100%" style="text-align:left;font-size:13px;overflow-x: scroll ;overflow-y: scroll ;">
+                    <thead>
+                    <tr> 
+                        <th style="width:50%;color:#0073b1;">Informations R.H</th>
+                        <th style="width:50%;color:#0073b1;">Qualification générale & CV</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                    		<td>
+                            	<input type="text" class="form-control" id="visa" name="visa" placeholder="Visa"><br>
+                                <input type="text" class="form-control" id="salaireActuel" name="salaireActuel" placeholder="Salaire actuel"><br>
+                                <input type="text" class="form-control" id="pretentionSalariale" name="pretentionSalariale" placeholder="Prétention salariale"><br>
+                                <input type="text" class="form-control" id="preavis" name="preavis" placeholder="Préavis"><br>
+    
+                                <label for="dateDeNaissance"><h6>Date de disponibilité :</h6></label>
+                                <input type="date" class="form-control" id="dateDeDisponibilite" name="dateDeDisponibilite" placeholder="Date de disponibilité"><br>
+                            
+                    		</td>
+                    		
+                    		<td>
+                                <input type="text" class="form-control" id="niveauEnFrancais" name="niveauEnFrancais" placeholder="Niveau en Français (note sur 10)"><br>
+                                <input type="text" class="form-control" id="niveauEnAnglais" name="niveauEnAnglais" placeholder="Niveau en Anglais (note sur 10)"><br>
+                                <input type="text" class="form-control" id="noteGlobale" name="noteGlobale" placeholder="Note globale (sur 10)"><br>
+   
+                   				
+                   				<label for="cvOriginal"><h6>CV Original :</h6></label>
+                                <div class="form-group">
+                        			<input type="file" name="cvOriginal" id="cvOriginal" >
+                   				</div><br>
+                   				
+                   				
+                   				<label for="cvOdix"><h6>CV Odix :</h6></label>
+                                <div class="form-group">
+                        			<input type="file" name="cvOdix" id="cvOdix" >
+                   				</div><br>
+                   				
+                            </td>
+                    	
+                        </tr>
+                    </tbody>
+                </table>
+    
+                
+                
+                <table id="my_table" class="table table-striped table-bordered" cellspacing="0" width="100%" style="text-align:left;font-size:13px;overflow-x: scroll ;overflow-y: scroll ;">
+                    
+                    <tbody>
+                    	<tr>
+                            <td>
+                               <div class="form-group">
+                     				<input type="submit" class="btn btn-primary btn-sm btn-block"  id="btnAjouter" value="Enregistrer" style="background-color: #0073b1;border: none;"/>
+                			   </div> 
+                            </td>
+                   		</tr>
+                   		
+                    </tbody>
+                </table>
+                
+                
+                </form>
+        </div> 
+		
+		<div class="col-sm-1" style="text-align: left;">
+    	</div>
+    </div>
+</div>
+
+{% include 'default/footer.html.twig' %}

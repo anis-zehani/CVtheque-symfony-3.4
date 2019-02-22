@@ -1,0 +1,275 @@
+			<nav aria-label="breadcrumb" style="padding-top:10px;width:100%">
+                <ol class="breadcrumb" style="background-color: #cbd7e0;color:#000000;vertical-align:middle;">
+                    <li class="breadcrumb-item"><a href="{{app.request.basePath}}/accueil/" style="color:#000000">Accueil</a></li>
+                    <li class="breadcrumb-item"><a href="{{app.request.basePath}}/showAllCandidats/" style="color:#000000">Mes Candidats</a></li>
+                    <li class="breadcrumb-item active" aria-current="page" style="color:#0073b1">{{ detailsCandidat.prenom }} {{ detailsCandidat.nom }}</li>
+                </ol>
+            </nav>
+            
+			<table id="my_table" class="table table-striped table-bordered" cellspacing="0" width="100%" style="text-align:left;font-size:13px;overflow-x: scroll ;overflow-y: scroll ;">
+                <thead>
+                <tr> 
+                    <th style="color:#0073b1;width:120px;padding: 0 ;vertical-align:middle;text-align:center">{{ detailsCandidat.prenom }} {{ detailsCandidat.nom }}</th>
+                    <th style="color:#0073b1;">Informations générales</th>
+                    <th style="color:#0073b1;width:50%">Spécialité & expérience</th>
+                </tr>
+                </thead>
+                <tbody>
+                	<tr>
+                        <td style="padding: 0 0 0 0;">
+                        	<img src="{{app.request.basePath}}/{{ detailsCandidat.photo }}"  width="120px" height="120px">
+                        </td>
+                        <td>
+                        
+                        <b>-Tél :</b> {{ detailsCandidat.telephone }}<br>
+                        <b>-Email :</b> {{ detailsCandidat.email }}<br>
+                        {% if detailsCandidat.dateDeNaissance is defined and detailsCandidat.dateDeNaissance |date("Y") matches '/^\\d+$/'%}
+    					<b>-Âge :</b> {{ 2018 - detailsCandidat.dateDeNaissance |date("Y") }} ans<br>
+    					{% else %}
+    					<b>-Âge :</b> {{ detailsCandidat.dateDeNaissance }}<br>
+                        {% endif %}
+                        
+                        <b>-Situation familiale :</b> {{ detailsCandidat.situationFamiliale }} {% if detailsCandidat.nombreEnfants is not empty %}- {{ detailsCandidat.nombreEnfants }} enfant(s){% endif %}<br>
+                        <b>-Adresse :</b> {{ detailsCandidat.adresse }}<br>
+                        
+                        </td>
+                        <td>
+                        -{{ detailsCandidat.specialite }}{% if detailsCandidat.entreprise is not empty %} <a href="{{ detailsCandidat.siteWebEntreprise }}" target="_blank">({{ detailsCandidat.entreprise }})</a>{% endif %}<br>
+                        <b>-Diplôme(s) :</b> 
+                            {% for diplome in detailsCandidat.listeDiplomes %}
+                                {{ diplome.nom }}
+                            {% endfor %}<br>
+                        <b>-Année de graduation :</b> {{ detailsCandidat.anneeGraduation }}<br>
+                        <b>-École(s) :</b> 
+                            {% for ecole in detailsCandidat.listeEcoles %}
+                                {{ ecole.nom }}
+                            {% endfor %}<br>
+                        <b>-Expérience :</b> {{ 2018 - detailsCandidat.anneeDemarrageCarriere }} an(s)<br> 
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+			
+			<table id="my_table" class="table table-striped table-bordered" cellspacing="0" width="100%" style="text-align:left;font-size:13px;overflow-x: scroll ;overflow-y: scroll ;">
+                <thead>
+                <tr> 
+                    <th style="color:#0073b1;">Technologies</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div style="max-height: 150px;overflow-y: scroll;">
+                            {% for technologie in detailsCandidat.listeTechnologies %}
+                                -{{ technologie.nom }}      <img src="{{app.request.basePath}}/bootstrap/img/delete-ajax.jpg" onclick="removeTechnologie({{ detailsCandidat.id }},{{ technologie.id }});" style="cursor:pointer;"/><br>
+                            {% endfor %}
+                            </div>
+                		</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <table id="my_table" class="table table-striped table-bordered" cellspacing="0" width="100%" style="text-align:left;font-size:13px;overflow-x: scroll ;overflow-y: scroll ;">
+                <thead>
+                <tr> 
+                    <th style="color:#0073b1;">Certifications</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div style="max-height: 150px;overflow-y: scroll;">
+                            {% for certification in detailsCandidat.listeCertifications %}
+                                -{{ certification.nom }}      <img src="{{app.request.basePath}}/bootstrap/img/delete-ajax.jpg" onclick="removeCertification({{ detailsCandidat.id }},{{ certification.id }});" style="cursor:pointer;"/><br>
+                            {% endfor %}
+                            </div>
+                		</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <table id="my_table" class="table table-striped table-bordered" cellspacing="0" width="100%" style="text-align:left;font-size:13px;overflow-x: scroll ;overflow-y: scroll ;">
+                <thead>
+                <tr> 
+                    <th style="color:#0073b1;">Description détaillée</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                        	<div style="max-height: 150px;overflow-y: scroll;">
+                            {{ detailsCandidat.descriptionDetaillee }}
+                            </div>
+                		</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <table id="my_table" class="table table-striped table-bordered" cellspacing="0" width="100%" style="text-align:left;font-size:13px;overflow-x: scroll ;overflow-y: scroll ;">
+                <thead>
+                <tr> 
+                    <th style="color:#0073b1;">Informations R.H</th>
+                    <th style="color:#0073b1;">Qualification générale & CV</th>
+                </tr>
+                </thead>
+                <tbody>
+                	<tr>
+                        <td>
+                            <b>-Visa :</b> {{ detailsCandidat.visa }}<br>
+                            <b>-Salaire actuel :</b> {{ detailsCandidat.salaireActuel }}<br>
+                            <b>-Prétention salariale :</b> {{ detailsCandidat.pretentionSalariale }}<br>
+                            <b>-Préavis :</b> {{ detailsCandidat.preavis }}<br>
+                            <b>-Date de disponibilité :</b> {{ detailsCandidat.dateDeDisponibilite }}<br>
+                        </td>
+                        <td>
+                            <b>-Niveau en français :</b> {{ detailsCandidat.niveauEnFrancais }} <br>
+                            <b>-Niveau en anglais :</b> {{ detailsCandidat.niveauEnAnglais }} <br>
+                            <b>-Note globale :</b> {{ detailsCandidat.noteGlobale }}<br>
+ 
+                            {% for cv in detailsCandidat.listeCvs %}
+                                  -{{ cv.nom }} : <a href="{{app.request.basePath}}/{{ cv.url }}" style="color:#0073b1;font-weight:bold;">Consulter</a><br>
+                            {% endfor %}
+                            
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            
+                <table id="my_table" class="table table-striped table-bordered" cellspacing="0" width="100%" style="text-align:left;font-size:13px;overflow-x: scroll ;overflow-y: scroll ;">
+                    
+                    <tbody>
+                    	<tr>
+                            <td>
+                               <div class="form-group">
+                               		<a href="{{app.request.basePath}}/formUpdateCandidat/{{ detailsCandidat.id }}/">
+                         				<input type="button" class="btn btn-primary btn-sm btn-block"  id="btnAjouter" value="Modifier" style="background-color: #0073b1;border: none;"/>
+                    			    </a>
+                			   </div> 
+                			   {% if detailsCandidat.etat == 'Active' %}
+                    			   <div class="form-group">
+                             			<input type="button" class="btn btn-primary btn-sm btn-block"  id="btnArchiver" value="Archiver" onclick="archiveCandidat({{ detailsCandidat.id }});" style="background-color: #0073b1;border: none;"/>
+                    			   </div> 
+                			   {% else %}
+                        		   <div class="form-group">
+                             			<input type="button" class="btn btn-primary btn-sm btn-block"  id="btnArchiver" value="Activer" onclick="activeCandidat({{ detailsCandidat.id }});" style="background-color: #0073b1;border: none;"/>
+                    			   </div>
+                               {% endif %}
+                            </td>
+                   		</tr>
+                   		
+                    </tbody>
+            </table>
+        
+        
+
+<SCRIPT>
+	//Archive un Candidat
+    function archiveCandidat(idCandidat)
+    {
+    	
+        $.ajax({
+            url : '{{app.request.basePath}}/archiveOneCandidat/'+idCandidat+'/',
+            type : 'GET',
+            dataType : 'html',
+            success : function(data, statut){
+
+            location.reload();
+            
+            //var json = JSON.parse(data);
+            //console.log(json);
+
+            },
+
+            error : function(resultat, statut, erreur){
+                console.log(statut);
+                console.log(erreur);
+                console.log(resultat);
+            }
+        });
+
+    }
+</SCRIPT>  
+
+<SCRIPT>
+	//Active un Candidat
+    function activeCandidat(idCandidat)
+    {
+    	
+        $.ajax({
+            url : '{{app.request.basePath}}/activeOneCandidat/'+idCandidat+'/',
+            type : 'GET',
+            dataType : 'html',
+            success : function(data, statut){
+
+            location.reload();
+            
+            //var json = JSON.parse(data);
+            //console.log(json);
+
+            },
+
+            error : function(resultat, statut, erreur){
+                console.log(statut);
+                console.log(erreur);
+                console.log(resultat);
+            }
+        });
+
+    }
+</SCRIPT> 
+        
+            
+<SCRIPT>
+	//Supprime une Technologie pour un Candidat
+    function removeTechnologie(idCandidat, idTechnologie)
+    {
+    	
+        $.ajax({
+            url : '{{app.request.basePath}}/removeTechnologieForCandidat/'+idCandidat+'/'+idTechnologie+'/',
+            type : 'GET',
+            dataType : 'html',
+            success : function(data, statut){
+                
+            location.reload();
+            //var json = JSON.parse(data);
+            //console.log(json);
+
+            },
+
+            error : function(resultat, statut, erreur){
+                console.log(statut);
+                console.log(erreur);
+                console.log(resultat);
+            }
+        });
+
+    }
+</SCRIPT>
+
+<SCRIPT>
+	//Supprime une Certification pour un Candidat
+    function removeCertification(idCandidat, idCertification)
+    {
+    	
+        $.ajax({
+            url : '{{app.request.basePath}}/removeCertificationForCandidat/'+idCandidat+'/'+idCertification+'/',
+            type : 'GET',
+            dataType : 'html',
+            success : function(data, statut){
+                
+            location.reload();
+            //var json = JSON.parse(data);
+            //console.log(json);
+
+            },
+
+            error : function(resultat, statut, erreur){
+                console.log(statut);
+                console.log(erreur);
+                console.log(resultat);
+            }
+        });
+
+    }
+</SCRIPT>

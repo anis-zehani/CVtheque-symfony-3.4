@@ -1,0 +1,218 @@
+				<nav aria-label="breadcrumb" style="padding-top:10px;width:100%">
+                	<ol class="breadcrumb" style="background-color: #cbd7e0;color:#000000;vertical-align:middle;">
+                        <li class="breadcrumb-item"><a href="{{app.request.basePath}}/accueil/" style="color:#000000">Accueil</a></li>
+                        <li class="breadcrumb-item"><a href="{{app.request.basePath}}/showAllOpportunites/" style="color:#000000">Mes Opportunités</a></li>
+                        <li class="breadcrumb-item active" aria-current="page" style="color:#0073b1">{{ OneOpportunite.titre }}</li>
+                    </ol>
+            	</nav>
+				
+				<table id="my_table1" class="table table-striped table-bordered" cellspacing="0" width="100%" style="text-align:left;font-size:13px;overflow-x: scroll ;overflow-y: scroll ;">
+                    <thead>
+                    <tr> 
+                    	<th style="color:#0073b1;width:120px"></th>
+                        <th style="color:#0073b1">Offre & Responsable</th>
+                        <th style="color:#0073b1">Les dates clés</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    	<tr>
+                    		<td style="padding: 0 0 0 0;">
+                        		<img src="{{app.request.basePath}}/{{ OneOpportunite.photo }}"  width="120px" height="120px">
+                        	</td>
+                            <td>
+                            	<b>-Titre :</b> {{ OneOpportunite.titre }}<br>
+    							<b>-Responsable :</b><a href="{{app.request.basePath}}/showOnePartenaire/{{ OneOpportunite.idUtilisateur }}/" style="color:#0073b1;font-weight:bold">{{ OneOpportunite.utilisateur }}</a><br>
+    							<b>-TJM :</b> {{ OneOpportunite.tjm }}<br>     
+                            </td>
+                            
+                            <td>
+                            	<b>-Date ajout :</b> {{ OneOpportunite.dateAjout }}<br>  
+                            	<b>-Date démarrage :</b> {{ OneOpportunite.dateDemarrageSouhaitee }}<br>     
+                           </td>
+                        </tr>
+                    </tbody>
+                </table>
+    			
+    			<table id="my_table2" class="table table-striped table-bordered" cellspacing="0" width="100%" style="text-align:left;font-size:13px;overflow-x: scroll ;overflow-y: scroll ;">
+                    <thead>
+                    <tr> 
+                        <th style="width:40%;color:#0073b1">Candidats potentiels : ({{ OneOpportunite.listeCandidats|length }})</th>
+                        <th style="width:40%;color:#0073b1">Technologies ciblées</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                {% for candidat in OneOpportunite.listeCandidats %}
+                                          <a href="{{app.request.basePath}}/showOneCandidat/{{ candidat.id }}/">-{{ candidat.prenom }} {{ candidat.nom }}</a>     <img src="{{app.request.basePath}}/bootstrap/img/delete-ajax.jpg" onclick="removeCandidatForOpportunite({{ OneOpportunite.id }} , {{ candidat.id }});" style="cursor:pointer;"/><br>
+                                {% endfor %}
+
+                    		</td>
+                    		
+                    		<td>
+                                {% for technologie in OneOpportunite.listeTechnologies %}
+                                          -{{ technologie.nom }}       <img src="{{app.request.basePath}}/bootstrap/img/delete-ajax.jpg" onclick="removeTechnologie({{ OneOpportunite.id }},{{ technologie.id }});" style="cursor:pointer;"/><br>
+                                {% endfor %}
+                    		</td>
+         
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <table id="my_table3" class="table table-striped table-bordered" cellspacing="0" width="100%" style="text-align:left;font-size:13px;overflow-x: scroll ;overflow-y: scroll ;">
+                    <thead>
+                    <tr>
+                        <th style="width:40%;color:#0073b1">Description détaillée</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                        
+                    		<td>
+                    			{{ OneOpportunite.descriptionDetaillee }}<br>
+                            </td>
+         
+                        </tr>
+                    </tbody>
+                </table>
+    
+                
+                
+                <table id="my_table4" class="table table-striped table-bordered" cellspacing="0" width="100%" style="text-align:left;font-size:13px;overflow-x: scroll ;overflow-y: scroll ;">
+                    
+                    <tbody>
+                    	<tr>
+                            <td>
+                               <div class="form-group">
+                                   <a href="{{app.request.basePath}}/formUpdateOpportunite/{{ OneOpportunite.id }}/">
+                         				<input type="button" class="btn btn-primary btn-sm btn-block"  id="btnAjouter" value="Modifier" style="background-color: #0073b1;border: none;"/>
+                    			   </a>
+                			   </div> 
+                			   {% if OneOpportunite.etat == 'Active' %}
+                    			   <div class="form-group">
+                             			<input type="button" class="btn btn-primary btn-sm btn-block"  id="btnArchiver" value="Archiver" onclick="archiveOpportunite({{ OneOpportunite.id }});" style="background-color: #0073b1;border: none;"/>
+                    			   </div> 
+                			   {% else %}
+                        		   <div class="form-group">
+                             			<input type="button" class="btn btn-primary btn-sm btn-block"  id="btnArchiver" value="Activer" onclick="activeOpportunite({{ OneOpportunite.id }});" style="background-color: #0073b1;border: none;"/>
+                    			   </div>
+                               {% endif %}
+                            </td>
+                   		</tr>
+                   		
+                    </tbody>
+                </table>
+
+
+
+<SCRIPT>
+	//Archive une Opportunité
+    function archiveOpportunite(idOpportunite)
+    {
+    	
+        $.ajax({
+            url : '{{app.request.basePath}}/archiveOneOpportunite/'+idOpportunite+'/',
+            type : 'GET',
+            dataType : 'html',
+            success : function(data, statut){
+
+            location.reload();
+            
+            //var json = JSON.parse(data);
+            //console.log(json);
+
+            },
+
+            error : function(resultat, statut, erreur){
+                console.log(statut);
+                console.log(erreur);
+                console.log(resultat);
+            }
+        });
+
+    }
+</SCRIPT>  
+
+<SCRIPT>
+	//Active une Opportunité
+    function activeOpportunite(idOpportunite)
+    {
+    	
+        $.ajax({
+            url : '{{app.request.basePath}}/activeOneOpportunite/'+idOpportunite+'/',
+            type : 'GET',
+            dataType : 'html',
+            success : function(data, statut){
+
+            location.reload();
+            
+            //var json = JSON.parse(data);
+            //console.log(json);
+
+            },
+
+            error : function(resultat, statut, erreur){
+                console.log(statut);
+                console.log(erreur);
+                console.log(resultat);
+            }
+        });
+
+    }
+</SCRIPT> 
+
+<SCRIPT>
+	//Supprime un Candidat dans une Opportunité
+    function removeCandidatForOpportunite(idOpportunite, idCandidat)
+    {
+    	
+        $.ajax({
+            url : '{{app.request.basePath}}/removeCandidatForOpportunite/'+idOpportunite+'/'+idCandidat+'/',
+            type : 'GET',
+            dataType : 'html',
+            success : function(data, statut){
+                
+            location.reload();
+            //var json = JSON.parse(data);
+            //console.log(json);
+
+            },
+
+            error : function(resultat, statut, erreur){
+                console.log(statut);
+                console.log(erreur);
+                console.log(resultat);
+            }
+        });
+
+    }
+</SCRIPT>  
+
+
+<SCRIPT>
+	//Supprime une Technologie pour une Opportunite
+    function removeTechnologie(idOpportunite, idTechnologie)
+    {
+    	
+        $.ajax({
+            url : '{{app.request.basePath}}/removeTechnologieForOpportunite/'+idOpportunite+'/'+idTechnologie+'/',
+            type : 'GET',
+            dataType : 'html',
+            success : function(data, statut){
+                
+            location.reload();
+            //var json = JSON.parse(data);
+            //console.log(json);
+
+            },
+
+            error : function(resultat, statut, erreur){
+                console.log(statut);
+                console.log(erreur);
+                console.log(resultat);
+            }
+        });
+
+    }
+</SCRIPT>             
+         

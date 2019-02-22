@@ -1,0 +1,175 @@
+			
+			<nav aria-label="breadcrumb" style="padding-top:10px;width:100%">
+                <ol class="breadcrumb" style="background-color: #cbd7e0;color:#000000;vertical-align:middle;">
+                    <li class="breadcrumb-item"><a href="{{app.request.basePath}}/accueil/" style="color:#000000">Accueil</a></li>
+                    <li class="breadcrumb-item active" aria-current="page" style="color:#0073b1">Candidats {{ EtatCandidats }} : {{ allCandidats|length }}</li>
+                </ol>
+            </nav>
+			
+			<table id="my_table" class="table table-striped table-bordered" cellspacing="0" width="100%" style="text-align:left;font-size:13px;overflow-x: scroll ;overflow-y: scroll ;">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th width="25%">Candidat</th>
+                    <th width="26%">Spécialité</th>
+                    <th>Technologies</th>
+                    <th width="2%"></th>
+                    <th width="2%"></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for key in allCandidats %}
+                    <tr>
+                    	
+                        <td style="padding: 0 0 0 0;cursor: pointer;">
+                        	<img src="{{app.request.basePath}}/{{ key.photo }}"  width="120px" height="120px" onclick="showOneCandidat({{key.id}});">
+                        </td>
+                        <td>
+                        	<div style="height: 100px;overflow-y: scroll;">
+                                -{{ key.prenom }} {{ key.nom }}<br>
+                                {% if key.anneeDemarrageCarriere is defined and key.anneeDemarrageCarriere matches '/^\\d+$/'%}
+                        			<b>-Expérience :</b> {{ 2018 - key.anneeDemarrageCarriere }} an(s)<br> 
+                        			{% else %}
+                        			<b>-Expérience :</b> {{ key.anneeDemarrageCarriere }} <br> 
+                                {% endif %}
+                                <b>-Tél :</b> {{ key.telephone }}<br>
+                                <b>-Visa :</b> {{ key.visa }}<br>
+                            </div>
+                        </td>
+                        <td>
+                            <div style="height: 100px;overflow-y: scroll;">
+                            -{{ key.specialite }}<br> 
+                            {% if key.entreprise is not empty %}<a href="{{ key.siteWebEntreprise }}" target="_blank">({{ key.entreprise }})</a>{% endif %}
+                            </div>
+                        </td>
+                        
+                        <td>
+                            <div style="height: 100px;overflow-y: scroll;">
+                            {% for technologie in key.listeTechnologies %}
+                                -{{ technologie.nom }}<br>
+                            {% endfor %}
+                            </div>
+                		</td>
+                        
+                        <td style="background-color: #FFFFFF">
+                            <a href="#" onclick="idSuppression={{key.id}}; $('#ModaleSupprimer').modal();"><img src="{{ asset('./bootstrap/img/delete.jpg') }}" width="20" height="20" ></a>
+                        </td>
+                        <td style="background-color: #FFFFFF">
+                            <a href="#" id="btnAfficher" onclick="showOneCandidat({{key.id}});"><img src="{{ asset('./bootstrap/img/update.jpg') }}" width="20" height="20" ></a>
+                        </td>
+                        
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            
+            <div class="form-row">
+            <!--------------------------- Feêtre POP-UP la Modale SUPPRIMER ------------------------------------------------>
+                <div class="modal fade" id="ModaleSupprimer" tabindex="-1" role="dialog" aria-labelledby="exampleModaleSalleTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <form action="../deleteCandidat/" method="post" name="formModale" id="formModale">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Supprimer un candidat</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    Attention, vous êtes sur le point de supprimer ce candidat.
+                                </div>
+                                <div class="modal-footer">
+                                	<input  type="hidden" id="id" name="id" value="id"/>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                                    <button type="submit" class="btn btn-primary" id="btnValider">Valider</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+        	</div>
+            
+<!-- Configuration de la DATATABLE-->
+<SCRIPT type="text/javascript">
+    $(document).ready(function() {
+        $('#my_table').DataTable({
+            "fixedColumns": true,
+            "autoWidth": true,
+            "scrollX": true,
+            "scrollY": true,
+            "language": {
+                "sProcessing": "Traitement en cours ...",
+                "sLengthMenu": "Afficher _MENU_ lignes",
+                "sZeroRecords": "Aucun résultat trouvé",
+                "sEmptyTable": "Aucune donnée disponible",
+                "sInfo": "Lignes _START_ à _END_ sur _TOTAL_",
+                "sInfoEmpty": "Aucune ligne affichée",
+                "sInfoFiltered": "(Filtrer un maximum de_MAX_)",
+                "sInfoPostFix": "",
+                "sSearch": "",
+                "sUrl": "",
+                "sInfoThousands": ",",
+                "sLoadingRecords": "Chargement...",
+                "oPaginate": {
+                    "sFirst": "Premier", "sLast": "Dernier", "sNext": "Suivant", "sPrevious": "Précédent"
+                },
+                "oAria": {
+                    "sSortAscending": ": Trier par ordre croissant", "sSortDescending": ": Trier par ordre décroissant"
+                }
+
+            }
+        });
+    } );
+
+</SCRIPT>
+
+<!-- Code qui s'exécute quand j'ouvre la Modale-->
+<SCRIPT type="text/javascript">
+    $('#ModaleSupprimer').on('shown.bs.modal', function () {
+        $('#myInput').trigger('focus');
+
+        var formulaire = document.getElementById('formModale');
+        formulaire.setAttribute("action", "../deleteCandidat/"+window.idSuppression);
+        idSuppression=0;
+
+    })
+</SCRIPT>
+
+<SCRIPT>
+    function showOneCandidat(idCandidat)
+    {
+    	var id = idCandidat;
+        url="{{app.request.basePath}}/showOneCandidat/"+ id+"/";
+		parent.location.href = url;
+    }
+</SCRIPT>
+
+
+<SCRIPT>
+	//Fonction Ajax : pour l'instant elle ne sert à rien
+    function detailsCandidat(idCandidat)
+    {
+        var id = idCandidat;
+
+        $.ajax({
+            url : '{{app.request.basePath}}/showOneCandidat/'+id+'/',
+            type : 'GET',
+            dataType : 'html',
+            success : function(data, statut){
+
+            //var json = $.parseJSON(data);
+            var json = JSON.parse(data);
+            
+            console.log(json);
+
+            },
+
+            error : function(resultat, statut, erreur){
+                console.log(statut);
+                console.log(erreur);
+                console.log(resultat);
+            }
+        });
+
+    }
+</SCRIPT>
